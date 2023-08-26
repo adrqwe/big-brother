@@ -1,8 +1,5 @@
 export interface IConfig {
-  api: TApiDefault;
+  iframeFront: string | undefined;
   defaultPartner: number;
   activeLanguage: "PL" | "EN";
 }
-type TApiDefault = {
-  default: string | undefined;
-};

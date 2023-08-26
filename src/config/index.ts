@@ -2,7 +2,7 @@ import { api } from "./api";
 import { IConfig } from "./types";
 
 const config: IConfig = {
-  api,
+  iframeFront: api.iframeFront,
   defaultPartner: 1,
   activeLanguage: "PL",
 };

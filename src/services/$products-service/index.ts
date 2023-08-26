@@ -6,10 +6,10 @@ import {
 import config from "./../../config";
 class ProductsService {
   private static getProductsUrl() {
-    return `${config.api.default}products`;
+    return `products`;
   }
   private static getSingleProductUrl(slug: string) {
-    return `${config.api.default}products/${slug}`;
+    return `products/${slug}`;
   }
 
   private cancelTokenProducts?: CancelTokenSource;

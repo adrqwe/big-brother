@@ -1,3 +1,3 @@
 export const api = {
-  default: process.env.REACT_APP_URL_PRODUCTS,
+  iframeFront: process.env.REACT_APP_FRONT_URL_IFRAME,
 };

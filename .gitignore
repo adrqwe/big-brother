@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/instafan_python/env
+/python/env
 
 # testing
 /coverage
