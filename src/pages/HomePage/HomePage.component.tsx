@@ -5,9 +5,35 @@ import { IHomePageProps } from "./HomePage.types";
 import { useStyles } from "./HomePage.styles";
 import Iframe from "../reusable/Iframe";
 import config from "../../config";
+import SideTabs from "../SideTabs/SideTabs.component";
+import clearAllSetInterval from "../reusable/ClearAllSetInterval";
+import TabItem from "../reusable/TabItem";
+import TabItemIcon from "../reusable/TabItemIcon";
+import TabLeft from "../reusable/TabLeft";
+import TabRight from "../reusable/TabRight";
+
+const sunIcon = require("../../utils/sun.png");
 
 const HomePage = ({}: IHomePageProps) => {
   const classes = useStyles();
+
+  const [sideTabsVisible, setSideTabsVisible] = useState(false);
+
+  const onMouseMoveSetSideTabsVisible = () => {
+    clearAllSetInterval();
+    setSideTabsVisible(true);
+    window.setInterval(() => {
+      setSideTabsVisible(false);
+    }, 6000);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", onMouseMoveSetSideTabsVisible);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMoveSetSideTabsVisible);
+    };
+  }, []);
 
   const [pageHeight, setPageHeight] = useState(
     document.documentElement.clientHeight
@@ -46,6 +72,24 @@ const HomePage = ({}: IHomePageProps) => {
         src={`${config.iframeFront}3`}
         height={pageHeight / 2}
       />
+      <SideTabs sideTabsVisible={sideTabsVisible}>
+        <TabRight>
+          <TabItem>
+            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+          </TabItem>
+          <TabItem>
+            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+          </TabItem>
+        </TabRight>
+        <TabLeft>
+          <TabItem>
+            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+          </TabItem>
+          <TabItem>
+            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+          </TabItem>
+        </TabLeft>
+      </SideTabs>
     </Grid>
   );
 };
