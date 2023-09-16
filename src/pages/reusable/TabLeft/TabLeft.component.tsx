@@ -6,11 +6,11 @@ import { useStyles } from "./TabLeft.styles";
 const TabLeft = ({ className, children }: ITabLeftProps) => {
   const classes = useStyles();
   return (
-    <Box className={`${classes.optionSliderLeft} ${classes.optionSlider}`}>
+    <div className={`${classes.optionSliderLeft} ${classes.optionSlider}`}>
       {children.map((element: JSX.Element, index: number) => {
         return element;
       })}
-    </Box>
+    </div>
   );
 };
 

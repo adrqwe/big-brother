@@ -13,16 +13,8 @@ export const useStyles = createUseStyles({
     backgroundColor: "transparent",
     cursor: "none",
   },
-
   selectCamera: {
     display: "block",
     height: "50vh",
-  },
-  optionSliderLeft: { left: 0 },
-  optionSliderRight: { right: 0 },
-  optionSlider: {
-    position: "fixed",
-    zIndex: 1,
-    top: 0,
   },
 });
