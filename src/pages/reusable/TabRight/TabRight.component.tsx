@@ -6,11 +6,11 @@ import { useStyles } from "./TabRight.styles";
 const TabRight = ({ className, children }: ITabRightProps) => {
   const classes = useStyles();
   return (
-    <Box className={`${classes.optionSliderRight} ${classes.optionSlider}`}>
+    <div className={`${classes.optionSliderRight} ${classes.optionSlider}`}>
       {children.map((element: JSX.Element, index: number) => {
         return element;
       })}
-    </Box>
+    </div>
   );
 };
 

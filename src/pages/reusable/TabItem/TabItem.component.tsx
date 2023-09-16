@@ -28,7 +28,9 @@ const TabItem = ({ className, children }: ITabItemProps) => {
         >
           {children}
         </div>
-        <div className={classes.item}>xDDDDDDDDDDDDDDD</div>
+        <div className={classes.item}>
+          xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+        </div>
       </div>
     </span>
   );
