@@ -10,6 +10,7 @@ import TabItem from "../reusable/TabItem";
 import TabItemIcon from "../reusable/TabItemIcon";
 import TabLeft from "../reusable/TabLeft";
 import TabRight from "../reusable/TabRight";
+import { TSelectedCamerasSuccessPayload } from "../../models/selectCamera/types";
 
 const sunIcon = require("../../utils/sun.png");
 
@@ -20,23 +21,36 @@ const defaultCamerasValue = {
   3: false,
 };
 
-const dupa = {
+let cameraStep = -1;
+let cameraIsSelected = false;
+
+let currentSelectedCameras: TSelectedCamerasSuccessPayload = {
   0: false,
   1: false,
   2: false,
   3: false,
 };
 
-let cameraStep = -1;
-let cameraIsSelected = false;
-
-const HomePage = ({}: IHomePageProps) => {
+const HomePage = ({
+  getSelectedCameras,
+  mountedSelectedCameras,
+}: IHomePageProps) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    mountedSelectedCameras();
+    onMouseMoveSetSideTabsVisible();
+  }, []);
+
+  useEffect(() => {
+    currentSelectedCameras = getSelectedCameras;
+  }, [getSelectedCameras]);
 
   const [selectedCameras, setSelectedCameras] = useState(defaultCamerasValue);
 
   const selectNextIndicatedCamera = () => {
-    const arrayOfCameras = Object.entries(dupa);
+    const arrayOfCameras = Object.entries(currentSelectedCameras);
+    console.log(currentSelectedCameras);
 
     let currentPositionCameras = arrayOfCameras
       .slice(cameraStep, arrayOfCameras.length)
@@ -84,6 +98,7 @@ const HomePage = ({}: IHomePageProps) => {
     window.setTimeout(() => {
       if (!cameraIsSelected) {
         window.setInterval(() => {
+          mountedSelectedCameras();
           cameraStep = selectNextIndicatedCamera();
         }, 6000);
       }

@@ -2,7 +2,7 @@ from asyncio import constants
 import time
 import cv2
 
-selectedCameras = {1: False, 2: False, 3: False, 4: False}
+selectedCameras = {0: False, 1: False, 2: False, 3: False}
 
 
 class Tracker:
@@ -94,14 +94,6 @@ class Tracker:
 
         self.boxes = boxes
 
-        for box in boxes:
-            cv2.rectangle(
-                frame,
-                (box[0], box[1]),
-                (box[0] + box[2], box[1] + box[3]),
-                (0, 255, 0),
-                3,
-            )
         return frame
 
     def refreshDetectedObjects(self, moveDetectionArea):

@@ -1,10 +1,12 @@
 import time
 import cv2
 
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, jsonify
 from moveDetection.tracker import Tracker, selectedCameras
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 mask1 = cv2.imread("./moveDetection/mask/chanel1Mask.png")
 mask2 = cv2.imread("./moveDetection/mask/chanel2Mask.png")
@@ -17,40 +19,43 @@ camera1 = Tracker(
         "rtsp://admin:Zetor7340@192.168.1.36:554/cam/realmonitor?channel=1&subtype=0"
     ),
     mask1,
-    numberOfCamera=1,
+    numberOfCamera=0,
 )
 camera2 = Tracker(
     cv2.VideoCapture(
         "rtsp://admin:Zetor7340@192.168.1.36:554/cam/realmonitor?channel=2&subtype=0"
     ),
     mask2,
-    numberOfCamera=2,
+    numberOfCamera=1,
 )
 camera3 = Tracker(
     cv2.VideoCapture(
         "rtsp://admin:Zetor7340@192.168.1.36:554/cam/realmonitor?channel=3&subtype=0"
     ),
     mask3,
-    numberOfCamera=3,
+    numberOfCamera=2,
 )
 camera4 = Tracker(
     cv2.VideoCapture(
         "rtsp://admin:Zetor7340@192.168.1.36:554/cam/realmonitor?channel=4&subtype=0"
     ),
     mask4,
-    numberOfCamera=4,
+    numberOfCamera=3,
 )
 
 
 def generate_frames(cap):
     while True:
-        time.sleep(0.2)
+        try:
+            time.sleep(0.2)
 
-        frame = cap.moveDetection()
-        ret, buffer = cv2.imencode(".jpg", frame)
-        frame = buffer.tobytes()
+            frame = cap.moveDetection()
+            ret, buffer = cv2.imencode(".jpg", frame)
+            frame = buffer.tobytes()
 
-        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+        except:
+            return None
 
 
 @app.route("/rendervideo0")
@@ -117,7 +122,7 @@ def video3():
         return None
 
 
-@app.route("/selected/cameras")
+@app.route("/selected/cameras", methods=["GET"])
 def selectCameras():
     return selectedCameras
 

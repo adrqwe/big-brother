@@ -3,3 +3,4 @@ Flask
 python-decouple
 numpy
 selenium
+flask-cors
