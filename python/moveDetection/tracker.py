@@ -1,42 +1,150 @@
+from asyncio import constants
+import time
 import cv2
-import numpy as np
 
-cap = cv2.VideoCapture("highway.mp4")
+selectedCameras = {1: False, 2: False, 3: False, 4: False}
 
-img = cv2.imread("dupa.png")
 
-object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=50)
+class Tracker:
+    object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=80)
 
-while True:
-    ret, frame = cap.read()
+    def __init__(self, cap, img, numberOfCamera) -> None:
+        self.cap = cap
+        self.img = img
+        self.detects_objects = {}
+        self.boxes = []
+        self.numberOfCamera = numberOfCamera
 
-    roi = cv2.addWeighted(frame, 1, img, 1, 1)
+    def selectConnectBoxes(self, data: list):
+        boxes = data
+        index = 0
+        while index < len(boxes):
+            for idx, box in enumerate(boxes):
+                if idx != index:
+                    a, b, c, d = boxes[index]
+                    corners = [(a, b), (a + c, b), (a + c, b + d), (a, b + d)]
+                    for x in corners:
+                        if (
+                            box[0] < x[0]
+                            and x[0] < box[0] + box[2]
+                            and box[1] < x[1]
+                            and x[1] < box[1] + box[3]
+                        ):
+                            firstBox = box
+                            secondBox = boxes[index]
+                            boxes.remove(boxes[index])
+                            boxes.remove(box)
 
-    mask = object_detector.apply(roi)
-    _, mask = cv2.threshold(mask, 160, 255, cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                            boxX = (
+                                firstBox[0]
+                                if firstBox[0] < secondBox[0]
+                                else secondBox[0]
+                            )
 
-    for cnt in contours:
-        # Calculate area and remove small elements
-        area = cv2.contourArea(cnt)
-        if area > 600:
-            x, y, w, h = cv2.boundingRect(cnt)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
-            objectX = x
-            objectY = y
-            objectXW = x + w
-            objectYH = y + h
+                            boxY = (
+                                firstBox[1]
+                                if firstBox[1] < secondBox[1]
+                                else secondBox[1]
+                            )
 
-            print(frame.shape)
+                            width = (
+                                firstBox[0] + firstBox[2] - boxX
+                                if firstBox[0] + firstBox[2]
+                                > secondBox[0] + secondBox[2]
+                                else secondBox[0] + secondBox[2] - boxX
+                            )
 
-            cachedObject = frame[objectY:objectYH, objectX:objectXW]
-            # cv2.imwrite("cos.png", cachedObject)
+                            height = (
+                                firstBox[1] + firstBox[3] - boxY
+                                if firstBox[1] + firstBox[3]
+                                > secondBox[1] + secondBox[3]
+                                else secondBox[1] + secondBox[3] - boxY
+                            )
 
-    cv2.imshow("frame", frame)
+                            boxes.append((boxX, boxY, width, height))
 
-    key = cv2.waitKey(30)
-    if key == 27:
-        break
+                            index = 0
+                            break
 
-cap.release()
-cv2.destroyAllWindows()
+                    else:
+                        continue
+                    break
+            index += 1
+        return boxes
+
+    def addContours(self, contours):
+        boxes = []
+        for cnt in contours:
+            area = cv2.contourArea(cnt)
+            if area > 150:
+                boxes.append(cv2.boundingRect(cnt))
+        return boxes
+
+    def track(self):
+        success, frame = self.cap.read()
+
+        imageMask = cv2.addWeighted(frame, 1, self.img, 1, 1)
+        mask = self.object_detector.apply(imageMask)
+
+        _, mask = cv2.threshold(mask, 160, 255, cv2.THRESH_BINARY)
+        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        contour_boxes = self.addContours(contours)
+        boxes = self.selectConnectBoxes(contour_boxes)
+
+        self.boxes = boxes
+
+        for box in boxes:
+            cv2.rectangle(
+                frame,
+                (box[0], box[1]),
+                (box[0] + box[2], box[1] + box[3]),
+                (0, 255, 0),
+                3,
+            )
+        return frame
+
+    def refreshDetectedObjects(self, moveDetectionArea):
+        founded = False
+        for obj in list(self.detects_objects):
+            if self.detects_objects[obj]["deathTime"] < time.time():
+                del self.detects_objects[obj]
+
+        for obj in self.detects_objects:
+            if self.detects_objects[obj]["bornTime"] - time.time() < -10:
+                founded = True
+
+        for box in list(moveDetectionArea):
+            for obj in list(self.detects_objects):
+                if (
+                    len(
+                        self.selectConnectBoxes(
+                            [box, self.detects_objects[obj]["area"]]
+                        )
+                    )
+                    < 2
+                ):
+                    self.detects_objects[obj]["area"] = box
+                    self.detects_objects[obj]["deathTime"] = time.time() + 5
+
+                    break
+            else:
+                self.detects_objects[f"object{time.time()}"] = {
+                    "area": box,
+                    "bornTime": time.time(),
+                    "deathTime": time.time() + 5,
+                }
+
+        selectedCameras[self.numberOfCamera] = founded
+
+    def moveDetection(self):
+        frame = self.track()
+        moveDetectionArea = []
+        for x, y, w, h in self.boxes:
+            moveDetectionArea.append((x - 100, y - 100, w + 200, h + 200))
+
+        moveDetectionArea = self.selectConnectBoxes(moveDetectionArea)
+
+        self.refreshDetectedObjects(moveDetectionArea)
+
+        return frame

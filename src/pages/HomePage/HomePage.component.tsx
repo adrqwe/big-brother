@@ -21,10 +21,10 @@ const defaultCamerasValue = {
 };
 
 const dupa = {
-  0: true,
+  0: false,
   1: false,
-  2: true,
-  3: true,
+  2: false,
+  3: false,
 };
 
 let cameraStep = -1;
