@@ -6,9 +6,11 @@ import HomePage from "./HomePage.component";
 import { IHomePageFromState, IHomePageFromDispatch } from "./HomePage.types";
 import { getSelectedCameras } from "../../models/selectCamera/selectors/getSelectedCameras";
 import { mountedSelectedCameras } from "../../models/selectCamera/actions";
+import { getMoveDetectionSetting } from "../../models/settings/selectors/getMoveDetectionSetting";
 
 const mapStateToProps = (state: _Store.IState): IHomePageFromState => ({
   getSelectedCameras: getSelectedCameras(state),
+  getMoveDetectionSetting: getMoveDetectionSetting(state),
 });
 
 const mapDispatchToProps = (

@@ -5,7 +5,7 @@ export const useStyles = createUseStyles({
   optionSlider: {
     position: "fixed",
     top: 0,
-    "& span": {
+    "& span.tab": {
       borderRadius: "40px 0 0 40px",
     },
   },
