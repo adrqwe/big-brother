@@ -10,7 +10,7 @@ const TabItem = ({ className, children }: ITabItemProps) => {
   const spanTab = useRef<HTMLSpanElement>(null);
 
   return (
-    <span className={`${classes.tab} ${slide}`} ref={spanTab}>
+    <span className={`${classes.tab} ${slide} tab`} ref={spanTab}>
       <div className={classes.tabChild}>
         <div
           className={classes.tabIcon}
@@ -26,11 +26,9 @@ const TabItem = ({ className, children }: ITabItemProps) => {
             }
           }}
         >
-          {children}
+          {children[0]}
         </div>
-        <div className={classes.item}>
-          xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-        </div>
+        <div className={classes.item}>{children[1]}</div>
       </div>
     </span>
   );

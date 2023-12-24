@@ -1,0 +1,2 @@
+export const SET_MOVE_DETECTION_SETTING =
+  "BB/settings/SET_MOVE_DETECTION_SETTING";

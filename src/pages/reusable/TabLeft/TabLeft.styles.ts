@@ -9,7 +9,7 @@ export const useStyles = createUseStyles({
   optionSlider: {
     position: "fixed",
     top: 0,
-    "& span": {
+    "& span.tab": {
       borderRadius: "0 40px 40px 0",
       justifyContent: "flex-end",
     },

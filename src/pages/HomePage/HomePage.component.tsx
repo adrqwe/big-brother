@@ -11,8 +11,10 @@ import TabItemIcon from "../reusable/TabItemIcon";
 import TabLeft from "../reusable/TabLeft";
 import TabRight from "../reusable/TabRight";
 import { TSelectedCamerasSuccessPayload } from "../../models/selectCamera/types";
+import SettingTabBody from "./components/SettingTabBody";
 
 const sunIcon = require("../../utils/sun.png");
+const settingGear = require("../../utils/settingGear.png");
 
 const defaultCamerasValue = {
   0: false,
@@ -23,6 +25,7 @@ const defaultCamerasValue = {
 
 let cameraStep = -1;
 let cameraIsSelected = false;
+let moveDetectionIsActive = false;
 
 let currentSelectedCameras: TSelectedCamerasSuccessPayload = {
   0: false,
@@ -33,6 +36,7 @@ let currentSelectedCameras: TSelectedCamerasSuccessPayload = {
 
 const HomePage = ({
   getSelectedCameras,
+  getMoveDetectionSetting,
   mountedSelectedCameras,
 }: IHomePageProps) => {
   const classes = useStyles();
@@ -43,6 +47,10 @@ const HomePage = ({
   }, []);
 
   useEffect(() => {
+    moveDetectionIsActive = getMoveDetectionSetting;
+  }, [getMoveDetectionSetting]);
+
+  useEffect(() => {
     currentSelectedCameras = getSelectedCameras;
   }, [getSelectedCameras]);
 
@@ -50,7 +58,6 @@ const HomePage = ({
 
   const selectNextIndicatedCamera = () => {
     const arrayOfCameras = Object.entries(currentSelectedCameras);
-    console.log(currentSelectedCameras);
 
     let currentPositionCameras = arrayOfCameras
       .slice(cameraStep, arrayOfCameras.length)
@@ -96,7 +103,7 @@ const HomePage = ({
     setSideTabsVisible(true);
 
     window.setTimeout(() => {
-      if (!cameraIsSelected) {
+      if (!cameraIsSelected && moveDetectionIsActive) {
         window.setInterval(() => {
           mountedSelectedCameras();
           cameraStep = selectNextIndicatedCamera();
@@ -169,17 +176,21 @@ const HomePage = ({
         <TabRight>
           <TabItem>
             <TabItemIcon img={sunIcon} title={`Słonecznie ${cameraStep}°`} />
+            <div>xd</div>
           </TabItem>
           <TabItem>
-            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+            <TabItemIcon img={settingGear} title="Ustawienia" />
+            <SettingTabBody />
           </TabItem>
         </TabRight>
         <TabLeft>
           <TabItem>
             <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+            <div>xd</div>
           </TabItem>
           <TabItem>
             <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
+            <div>xd</div>
           </TabItem>
         </TabLeft>
       </SideTabs>

@@ -9,11 +9,12 @@ import { IServices } from "./services";
 
 import { IAction as IProductsAction } from "./../models/products/types";
 import { IAction as ISelectCameraAction } from "./../models/selectCamera/types";
+import { IAction as ISettingsAction } from "./../models/settings/types";
 
 declare module "@Store" {
   export type IState = StateType<typeof rootReducer>;
   /* @@STORE_COMPONENT@@ */
-  export type IAction = IProductsAction | ISelectCameraAction;
+  export type IAction = IProductsAction | ISelectCameraAction | ISettingsAction;
 
   export type IService = IServices;
   export type IEpic = Epic<IAction, IAction, IState, IService>;
