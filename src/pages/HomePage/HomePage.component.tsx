@@ -12,8 +12,11 @@ import TabLeft from "../reusable/TabLeft";
 import TabRight from "../reusable/TabRight";
 import { TSelectedCamerasSuccessPayload } from "../../models/selectCamera/types";
 import SettingTabBody from "./components/SettingTabBody";
+import ForecastWeatherBody from "./components/ForecastWeatherBody";
+import weatherIcon from "./components/WeatherIcon/WeatherIcon";
 
 const sunIcon = require("../../utils/sun.png");
+const questionMark = require("../../utils/questionMark.png");
 const settingGear = require("../../utils/settingGear.png");
 
 const defaultCamerasValue = {
@@ -37,7 +40,9 @@ let currentSelectedCameras: TSelectedCamerasSuccessPayload = {
 const HomePage = ({
   getSelectedCameras,
   getMoveDetectionSetting,
+  getTodayWeather,
   mountedSelectedCameras,
+  mountedTodayWeather,
 }: IHomePageProps) => {
   const classes = useStyles();
 
@@ -98,6 +103,12 @@ const HomePage = ({
 
   const [sideTabsVisible, setSideTabsVisible] = useState(false);
 
+  useEffect(() => {
+    if (sideTabsVisible) {
+      mountedTodayWeather();
+    }
+  }, [sideTabsVisible]);
+
   const onMouseMoveSetSideTabsVisible = () => {
     clearAllSetInterval();
     setSideTabsVisible(true);
@@ -126,6 +137,19 @@ const HomePage = ({
       window.removeEventListener("mousemove", onMouseMoveSetSideTabsVisible);
     };
   }, []);
+
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const todayWeather = () => {
+    if (getTodayWeather?.cod === 200) {
+      return `${capitalizeFirstLetter(
+        getTodayWeather.weather[0].description
+      )} ${Math.round(getTodayWeather.main.temp)}°`;
+    }
+    return "Brak danych";
+  };
 
   return (
     <div className={classes.container}>
@@ -175,8 +199,15 @@ const HomePage = ({
       >
         <TabRight>
           <TabItem>
-            <TabItemIcon img={sunIcon} title={`Słonecznie ${cameraStep}°`} />
-            <div>xd</div>
+            <TabItemIcon
+              img={
+                getTodayWeather?.cod === 200
+                  ? weatherIcon[getTodayWeather.weather[0].icon]
+                  : questionMark
+              }
+              title={todayWeather()}
+            />
+            <ForecastWeatherBody />
           </TabItem>
           <TabItem>
             <TabItemIcon img={settingGear} title="Ustawienia" />
