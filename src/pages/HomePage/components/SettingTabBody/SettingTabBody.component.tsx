@@ -1,8 +1,8 @@
 import { FormControlLabel, Switch } from "@mui/material";
+import { useEffect } from "react";
 
 import { useStyles } from "./SettingTabBody.styles";
 import { ISettingTabBodyProps } from "./SettingTabBody.types";
-import { useEffect } from "react";
 
 const SettingTabBody = ({
   getMoveDetectionSetting,

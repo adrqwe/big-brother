@@ -12,7 +12,7 @@ export const useStyles = createUseStyles({
     textAlign: "center",
     width: "100%",
     color: "white",
-    fontSize: "20px",
+    fontSize: "18px",
   },
   icon: {
     width: "150px",
