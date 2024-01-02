@@ -9,6 +9,10 @@ import { mountedSelectedCameras } from "../../models/selectCamera/actions";
 import { getMoveDetectionSetting } from "../../models/settings/selectors/getMoveDetectionSetting";
 import { mountedTodayWeather } from "../../models/weatherApi/actions";
 import { getTodayWeather } from "../../models/weatherApi/selectors/getTodayWeather";
+import {
+  mountedWhoIsInHome,
+  setWhoIsInHome,
+} from "../../models/whoIsInHome/actions";
 
 const mapStateToProps = (state: _Store.IState): IHomePageFromState => ({
   getSelectedCameras: getSelectedCameras(state),
@@ -21,6 +25,8 @@ const mapDispatchToProps = (
 ): IHomePageFromDispatch => ({
   mountedSelectedCameras: () => dispatch(mountedSelectedCameras()),
   mountedTodayWeather: () => dispatch(mountedTodayWeather()),
+  mountedWhoIsInHome: () => dispatch(mountedWhoIsInHome()),
+  setWhoIsInHome: (data) => dispatch(setWhoIsInHome(data)),
 });
 export default connect<
   IHomePageFromState,

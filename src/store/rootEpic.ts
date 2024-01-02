@@ -3,6 +3,7 @@ import { combineEpics } from "redux-observable";
 import * as Products from "../models/products/epics";
 import * as SelectCamera from "../models/selectCamera/epics";
 import * as WeatherApi from "../models/weatherApi/epics";
+import * as WhoIsInHome from "../models/whoIsInHome/epics";
 
 export default combineEpics(
   Products.fetchProductsWhenMounted,
@@ -16,5 +17,8 @@ export default combineEpics(
   WeatherApi.fetchTodayWeatherMounted,
   WeatherApi.getTodayWeatherWhenRequested,
   WeatherApi.fetchForecastWeatherMounted,
-  WeatherApi.getForecastWeatherWhenRequested
+  WeatherApi.getForecastWeatherWhenRequested,
+
+  WhoIsInHome.fetchWhoIsInHomeMounted,
+  WhoIsInHome.getWhoIsInHomeWhenRequested
 );

@@ -1,11 +1,17 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ITabItemProps } from "./TabItem.types";
 import { useStyles } from "./TabItem.styles";
 
-const TabItem = ({ className, children }: ITabItemProps) => {
+const TabItem = ({ className, children, onTabExtended }: ITabItemProps) => {
   const classes = useStyles();
   const [slide, setSlide] = useState("none");
+
+  useEffect(() => {
+    if (slide !== "none") {
+      onTabExtended();
+    }
+  }, [slide]);
 
   const spanTab = useRef<HTMLSpanElement>(null);
 

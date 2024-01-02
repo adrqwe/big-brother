@@ -1,6 +1,9 @@
 import time
 import cv2
 
+from scanForIpAddress.automation import getMacAddress
+from whoIsInHome.whoIsInHome import whoIsInHome
+
 from flask import Flask, render_template, Response, jsonify
 from moveDetection.tracker import Tracker, selectedCameras
 from flask_cors import CORS
@@ -125,6 +128,17 @@ def video3():
 @app.route("/selected/cameras", methods=["GET"])
 def selectCameras():
     return selectedCameras
+
+
+@app.route("/who/is/in/home", methods=["GET"])
+def howIsInHome():
+    listWhoIsInHome = whoIsInHome(getMacAddress())
+    if listWhoIsInHome:
+        response = {"status": 200, "data": list(listWhoIsInHome)}
+    else:
+        response = {"status": 500, "data": None}
+
+    return response
 
 
 if __name__ == "__main__":

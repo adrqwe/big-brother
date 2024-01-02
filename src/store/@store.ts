@@ -11,6 +11,7 @@ import { IAction as IProductsAction } from "./../models/products/types";
 import { IAction as ISelectCameraAction } from "./../models/selectCamera/types";
 import { IAction as ISettingsAction } from "./../models/settings/types";
 import { IAction as IWeatherApiAction } from "./../models/weatherApi/types";
+import { IAction as IWhoIsInHomeAction } from "./../models/whoIsInHome/types";
 
 declare module "@Store" {
   export type IState = StateType<typeof rootReducer>;
@@ -19,7 +20,8 @@ declare module "@Store" {
     | IProductsAction
     | ISelectCameraAction
     | ISettingsAction
-    | IWeatherApiAction;
+    | IWeatherApiAction
+    | IWhoIsInHomeAction;
 
   export type IService = IServices;
   export type IEpic = Epic<IAction, IAction, IState, IService>;
