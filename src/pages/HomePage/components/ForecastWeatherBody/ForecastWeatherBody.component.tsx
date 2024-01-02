@@ -39,7 +39,7 @@ const ForecastWeatherBody = ({
     let object: TForecastList[] = [];
 
     let index = 0;
-    while (Number(list[index].dt_txt.slice(8, 10)) === moment().daysInMonth()) {
+    while (Number(list[index].dt_txt.slice(8, 10)) === moment().day()) {
       index++;
     }
 

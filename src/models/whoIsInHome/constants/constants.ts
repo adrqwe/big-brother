@@ -1,0 +1,10 @@
+export const SET_WHO_IS_IN_HOME = "BB/whoIsInHome/SET_WHO_IS_IN_HOME";
+
+export const MOUNTED_WHO_IS_IN_HOME = "BB/whoIsInHome/MOUNTED_WHO_IS_IN_HOME";
+
+export const _GET_WHO_IS_IN_HOME_REQUEST =
+  "BB/whoIsInHome/_GET_WHO_IS_IN_HOME_REQUEST";
+export const _GET_WHO_IS_IN_HOME_SUCCESS =
+  "BB/whoIsInHome/_GET_WHO_IS_IN_HOME_SUCCESS";
+export const _GET_WHO_IS_IN_HOME_FAILURE =
+  "BB/whoIsInHome/_GET_WHO_IS_IN_HOME_FAILURE";

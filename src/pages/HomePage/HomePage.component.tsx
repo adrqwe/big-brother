@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import moment from "moment";
 
 import { IHomePageProps } from "./HomePage.types";
 import { useStyles } from "./HomePage.styles";
@@ -14,10 +15,12 @@ import { TSelectedCamerasSuccessPayload } from "../../models/selectCamera/types"
 import SettingTabBody from "./components/SettingTabBody";
 import ForecastWeatherBody from "./components/ForecastWeatherBody";
 import weatherIcon from "./components/WeatherIcon/WeatherIcon";
+import WhoIsInHomeBody from "./components/WhoIsInHomeBody";
 
 const sunIcon = require("../../utils/sun.png");
 const questionMark = require("../../utils/questionMark.png");
 const settingGear = require("../../utils/settingGear.png");
+const whoIsInHomeIcon = require("../../utils/whoIsInHomeIcon.png");
 
 const defaultCamerasValue = {
   0: false,
@@ -29,6 +32,8 @@ const defaultCamerasValue = {
 let cameraStep = -1;
 let cameraIsSelected = false;
 let moveDetectionIsActive = false;
+let extended = false;
+let whoIsInHomeDelay = moment().subtract(10, "second").unix();
 
 let currentSelectedCameras: TSelectedCamerasSuccessPayload = {
   0: false,
@@ -43,13 +48,24 @@ const HomePage = ({
   getTodayWeather,
   mountedSelectedCameras,
   mountedTodayWeather,
+  mountedWhoIsInHome,
+  setWhoIsInHome,
 }: IHomePageProps) => {
   const classes = useStyles();
+
+  const [tabIsExtended, setTabIsExtended] = useState(false);
+  const handleTabIsExtended = () => {
+    setTabIsExtended(true);
+  };
 
   useEffect(() => {
     mountedSelectedCameras();
     onMouseMoveSetSideTabsVisible();
   }, []);
+
+  useEffect(() => {
+    extended = tabIsExtended;
+  }, [tabIsExtended]);
 
   useEffect(() => {
     moveDetectionIsActive = getMoveDetectionSetting;
@@ -106,6 +122,7 @@ const HomePage = ({
   useEffect(() => {
     if (sideTabsVisible) {
       mountedTodayWeather();
+      setWhoIsInHome({ status: 100, data: null });
     }
   }, [sideTabsVisible]);
 
@@ -113,16 +130,20 @@ const HomePage = ({
     clearAllSetInterval();
     setSideTabsVisible(true);
 
-    window.setTimeout(() => {
-      if (!cameraIsSelected && moveDetectionIsActive) {
-        window.setInterval(() => {
-          mountedSelectedCameras();
-          cameraStep = selectNextIndicatedCamera();
-        }, 6000);
-      }
+    window.setTimeout(
+      () => {
+        if (!cameraIsSelected && moveDetectionIsActive) {
+          window.setInterval(() => {
+            mountedSelectedCameras();
+            cameraStep = selectNextIndicatedCamera();
+          }, 6000);
+        }
 
-      setSideTabsVisible(false);
-    }, 6000);
+        setSideTabsVisible(false);
+        setTabIsExtended(false);
+      },
+      extended ? 20000 : 3000
+    );
 
     window.setTimeout(() => {
       onMouseMoveSetSideTabsVisible();
@@ -149,6 +170,13 @@ const HomePage = ({
       )} ${Math.round(getTodayWeather.main.temp)}°`;
     }
     return "Brak danych";
+  };
+
+  const whoIsInHome = () => {
+    if (whoIsInHomeDelay < moment().unix()) {
+      mountedWhoIsInHome();
+      whoIsInHomeDelay = moment().add(25, "second").unix();
+    }
   };
 
   return (
@@ -198,7 +226,7 @@ const HomePage = ({
         setSelectedCameras={setSelectedCameras}
       >
         <TabRight>
-          <TabItem>
+          <TabItem onTabExtended={handleTabIsExtended}>
             <TabItemIcon
               img={
                 getTodayWeather?.cod === 200
@@ -209,19 +237,27 @@ const HomePage = ({
             />
             <ForecastWeatherBody />
           </TabItem>
-          <TabItem>
+          <TabItem onTabExtended={handleTabIsExtended}>
             <TabItemIcon img={settingGear} title="Ustawienia" />
             <SettingTabBody />
           </TabItem>
         </TabRight>
         <TabLeft>
-          <TabItem>
-            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
-            <div>xd</div>
+          <TabItem
+            onTabExtended={() => {
+              handleTabIsExtended();
+              whoIsInHome();
+            }}
+          >
+            <TabItemIcon
+              img={whoIsInHomeIcon}
+              title="Sprawdź kto jest w domu"
+            />
+            <WhoIsInHomeBody />
           </TabItem>
-          <TabItem>
+          <TabItem onTabExtended={handleTabIsExtended}>
             <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
-            <div>xd</div>
+            <div style={{ width: 500 }}>xd</div>
           </TabItem>
         </TabLeft>
       </SideTabs>
