@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /python/env
+/python/.env
 .env
 
 # testing
