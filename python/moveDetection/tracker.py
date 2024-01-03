@@ -1,4 +1,3 @@
-from asyncio import constants
 import time
 import cv2
 
@@ -80,7 +79,7 @@ class Tracker:
                 boxes.append(cv2.boundingRect(cnt))
         return boxes
 
-    def track(self):
+    def track(self, selectMovingObject):
         success, frame = self.cap.read()
 
         imageMask = cv2.addWeighted(frame, 1, self.img, 1, 1)
@@ -91,6 +90,10 @@ class Tracker:
 
         contour_boxes = self.addContours(contours)
         boxes = self.selectConnectBoxes(contour_boxes)
+
+        if selectMovingObject:
+            for x, y, w, h in boxes:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         self.boxes = boxes
 
@@ -129,8 +132,8 @@ class Tracker:
 
         selectedCameras[self.numberOfCamera] = founded
 
-    def moveDetection(self):
-        frame = self.track()
+    def moveDetection(self, tractMovingObject):
+        frame = self.track(tractMovingObject)
         moveDetectionArea = []
         for x, y, w, h in self.boxes:
             moveDetectionArea.append((x - 100, y - 100, w + 200, h + 200))

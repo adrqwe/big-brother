@@ -1,6 +1,7 @@
 import _Store from "@Store";
 import { applyMiddleware, createStore } from "redux";
 import { createEpicMiddleware } from "redux-observable";
+
 import createEnhancersComposer from "./createEnhancersComposer";
 import rootEpic from "./rootEpic";
 import rootReducer from "./rootReducer";
@@ -14,7 +15,9 @@ const epicMiddleware = createEpicMiddleware<
 >({
   dependencies: services,
 });
+
 const enhancersComposer = createEnhancersComposer();
+
 export default function configureStore(preLoadedState?: object) {
   const store = createStore(
     rootReducer,

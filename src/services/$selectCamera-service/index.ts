@@ -7,6 +7,9 @@ class SelectCameraService {
   private static getSelectCamerasUrl() {
     return `${config.defaultAPI}selected/cameras`;
   }
+  private static getMovingObjectsUrl() {
+    return `${config.defaultAPI}moving/object/select`;
+  }
 
   private cancelTokenProducts?: CancelTokenSource;
 
@@ -16,6 +19,21 @@ class SelectCameraService {
       axios
         .get(SelectCameraService.getSelectCamerasUrl(), {
           cancelToken: this.cancelTokenProducts.token,
+        })
+        .then((data) => resolve(data.data))
+        .catch((error) => reject(error));
+    });
+  }
+
+  public getMovingObjects(bool: string): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      this.cancelTokenProducts = axios.CancelToken.source();
+      axios
+        .get(SelectCameraService.getMovingObjectsUrl(), {
+          cancelToken: this.cancelTokenProducts.token,
+          params: {
+            selectMovingObjects: bool,
+          },
         })
         .then((data) => resolve(data.data))
         .catch((error) => reject(error));

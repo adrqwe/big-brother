@@ -17,7 +17,7 @@ import ForecastWeatherBody from "./components/ForecastWeatherBody";
 import weatherIcon from "./components/WeatherIcon/WeatherIcon";
 import WhoIsInHomeBody from "./components/WhoIsInHomeBody";
 
-const sunIcon = require("../../utils/sun.png");
+const notificationIcon = require("../../utils/notificationIcon.png");
 const questionMark = require("../../utils/questionMark.png");
 const settingGear = require("../../utils/settingGear.png");
 const whoIsInHomeIcon = require("../../utils/whoIsInHomeIcon.png");
@@ -46,10 +46,12 @@ const HomePage = ({
   getSelectedCameras,
   getMoveDetectionSetting,
   getTodayWeather,
+  getMovingObjectsSetting,
   mountedSelectedCameras,
   mountedTodayWeather,
   mountedWhoIsInHome,
   setWhoIsInHome,
+  mountedMovingObjects,
 }: IHomePageProps) => {
   const classes = useStyles();
 
@@ -62,6 +64,10 @@ const HomePage = ({
     mountedSelectedCameras();
     onMouseMoveSetSideTabsVisible();
   }, []);
+
+  useEffect(() => {
+    mountedMovingObjects(getMovingObjectsSetting ? "1" : "");
+  }, [getMovingObjectsSetting]);
 
   useEffect(() => {
     extended = tabIsExtended;
@@ -256,8 +262,18 @@ const HomePage = ({
             <WhoIsInHomeBody />
           </TabItem>
           <TabItem onTabExtended={handleTabIsExtended}>
-            <TabItemIcon img={sunIcon} title="Słonecznie 21°" />
-            <div style={{ width: 500 }}>xd</div>
+            <TabItemIcon img={notificationIcon} title="Powiadomienia" />
+            <div
+              style={{
+                width: 500,
+                display: "flex",
+                alignItems: "center",
+                height: "100%",
+                justifyContent: "center",
+              }}
+            >
+              Brak nowych powiadomień
+            </div>
           </TabItem>
         </TabLeft>
       </SideTabs>

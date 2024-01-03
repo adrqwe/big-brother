@@ -1,10 +1,12 @@
 import { ActionType, StateType } from "typesafe-actions";
+
 import * as actions from "./../actions";
 
 export type IAction = ActionType<typeof actions>;
 
 export interface ISelectCameraReducer {
   selectedCameras: TSelectedCamerasSuccessPayload;
+  movingObjects: number;
 }
 export type TSelectedCamerasSuccessPayload = {
   0: Boolean;
