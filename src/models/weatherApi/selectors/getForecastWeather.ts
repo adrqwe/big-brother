@@ -1,5 +1,6 @@
 import _Store from "@Store";
 import { Selector } from "reselect";
+
 import { TForecastWeatherSuccessPayload } from "../types";
 
 export const getForecastWeather: Selector<

@@ -6,11 +6,13 @@ export interface IHomePageFromState {
   getSelectedCameras: TSelectedCamerasSuccessPayload;
   getMoveDetectionSetting: boolean;
   getTodayWeather: TTodayWeatherSuccessPayload | null;
+  getMovingObjectsSetting: boolean;
 }
 export interface IHomePageFromDispatch {
   mountedSelectedCameras: () => void;
   mountedTodayWeather: () => void;
   mountedWhoIsInHome: () => void;
   setWhoIsInHome: (data: TWhoIsInHomeSuccessPayload) => void;
+  mountedMovingObjects: (data: string) => void;
 }
 export type IHomePageProps = IHomePageFromState & IHomePageFromDispatch;

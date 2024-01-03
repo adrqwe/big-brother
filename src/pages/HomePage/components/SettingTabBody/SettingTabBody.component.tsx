@@ -6,13 +6,18 @@ import { ISettingTabBodyProps } from "./SettingTabBody.types";
 
 const SettingTabBody = ({
   getMoveDetectionSetting,
+  getMovingObjectsSetting,
   setMoveDetectionSetting,
+  setMovingObjectsSetting,
 }: ISettingTabBodyProps) => {
   const classes = useStyles();
 
   useEffect(() => {
     setMoveDetectionSetting(
       Boolean(localStorage.getItem("moveDetectionSwitch"))
+    );
+    setMovingObjectsSetting(
+      Boolean(localStorage.getItem("movingObjectsSwitch"))
     );
   }, []);
 
@@ -25,6 +30,15 @@ const SettingTabBody = ({
     setMoveDetectionSetting(!getMoveDetectionSetting);
   };
 
+  const movingObjectsSwitchOnChange = () => {
+    if (!getMovingObjectsSetting) {
+      localStorage.setItem("movingObjectsSwitch", "1");
+    } else {
+      localStorage.setItem("movingObjectsSwitch", "");
+    }
+    setMovingObjectsSetting(!getMovingObjectsSetting);
+  };
+
   return (
     <div>
       <FormControlLabel
@@ -35,6 +49,15 @@ const SettingTabBody = ({
           />
         }
         label="Auto-kamera"
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={getMovingObjectsSetting}
+            onChange={movingObjectsSwitchOnChange}
+          />
+        }
+        label="Pokazuj wykryty ruch"
       />
     </div>
   );

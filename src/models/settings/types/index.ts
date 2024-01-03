@@ -6,4 +6,5 @@ export type IAction = ActionType<typeof actions>;
 
 export interface ISettingsReducer {
   moveDetectionSetting: boolean;
+  movingObjectsSetting: boolean;
 }
