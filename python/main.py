@@ -19,6 +19,9 @@ mask4 = cv2.imread("./moveDetection/mask/chanel4Mask.png")
 password = config("PASSWORD")
 ipAddress = config("CAMERA_ADDRESS")
 
+port = config("SERVER_PORT")
+host = config("SERVER_HOST")
+
 tractMovingObject = False
 
 
@@ -147,4 +150,4 @@ def howIsInHome():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=port, host=host)
